@@ -1,6 +1,6 @@
 # Segmenting Soft-Tissue Sarcoma Using Convolutional Neural Networks
 
-![alt text](images/better_banner.png)](https://www.kaggle.com/4quant/soft-tissue-sarcoma)
+![alt text][(images/better_banner.png)](https://www.kaggle.com/4quant/soft-tissue-sarcoma)
 
 The architectures are inspired by:
 * [U-Net: Convolutional Networks for Biomedical Image Segmentation](http://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/).
