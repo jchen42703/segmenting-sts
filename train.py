@@ -22,8 +22,8 @@ hm_epochs = 5
 batch_size = 18
 
 #initializing model
-from model import FCN
-model = FCN(ct_train)
+from model import UNET_2D
+model = UNET_2D(ct_train)
 
 #loss/evaluation
 def dice_coef(y_true, y_pred, smooth=1):
