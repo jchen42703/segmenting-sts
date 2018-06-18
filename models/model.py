@@ -70,7 +70,8 @@ class MaxoutConv2D(Layer):
         
         return (input_shape[0], output_height, output_width, self.output_dim)
 
-#defining models architecture
+#defining model architectures
+
 def UNET_2D(x_train): 
     '''
     2d UNet implementation
