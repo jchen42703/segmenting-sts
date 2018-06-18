@@ -115,7 +115,7 @@ def cascade(first_cascade, second_cascade):
     Arguments:
         first_cascade: input array for the first cascade (56 by 56 patches)
         second_cascade: input array for the second cascade (28 by 28 patches)
-        NOTE: TO GET THE SECOND_CASCADE PATCHES, JUST CHANGE THE PATCH DIMENSIONS IN preprocess.py and run gen_patches
+        NOTE: TO GET THE SECOND_CASCADE PATCHES, JUST CHANGE THE PATCH DIMENSIONS IN preprocess.py and run data-gen.py
     Returns:
         model: keras class 
     '''
