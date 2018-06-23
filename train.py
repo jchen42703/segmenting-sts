@@ -46,7 +46,7 @@ from keras.preprocessing.image import ImageDataGenerator
 datagen = ImageDataGenerator(horizontal_flip = True, vertical_flip=True)
 datagen.fit(ct_train,augment = True)
 history = model.fit_generator(datagen.flow(ct_train, y_patches_train, batch_size=batch_size),
-                            steps_per_epoch=len(ct_train) / batch_size, epochs=hm_epochs, callbacks= [callback], validation_data 
+                            steps_per_epoch=len(ct_train) / batch_size, epochs=hm_epochs, callbacks= [callback], validation_data= 
                             datagen.flow(val_train, y_patches_val, batch_size=batch_size), validation_steps = len(val_train)/4)
 #saving model
 model.save('model.h5')
