@@ -11,14 +11,25 @@ import keras.backend as K
 
 class unet_2d(object):
     '''
-        2d UNet Keras implementation
-        ** ONLY FOR BINARY CASES
+        2D U-Net Keras implementation
+
+    methods:
+    * model: returns a keras.models.Model
+    * compile_model: returns a compiled model with a specified learning rate, lr (dice loss, amsgrad)
+    * get_possible_input_shapes: returns a list of possible image shapes compatible with the model
     '''
     def __init__(self, n_fea = [64, 128, 256, 512, 1024], patch_size = (96,96,1), num_classes=2,
                  conv_kernel = (3,3), deconv_kernel = (2,2), activation = 'relu', padding = 'same',
                  ):
-        
-        
+        '''
+        n_fea: list of number of filters for each stack of convs; currently, only supports 5
+        patch_size: window size; (h,w,1)
+        num_classes: int
+        conv_kernel: 2D
+        deconv_kernel: 2D
+        activation: 
+        padding:
+        '''
         self.n_fea = n_fea
         self.patch_size = patch_size
         self.num_classes = num_classes
@@ -85,6 +96,7 @@ class unet_2d(object):
     def compile_model(self, lr): 
         '''
         compiles model
+        lr: learning rate
         '''
         # compiling model
         #defining loss/evaluation functions
