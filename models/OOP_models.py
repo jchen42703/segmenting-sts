@@ -154,7 +154,7 @@ class DilatedCNN(object)
         self.activation = activation
         self.num_classes = num_classes
     
-    @staticmethod
+#     @staticmethod
     def conv_block(self, input, n_filters, kernel_size = (3,3), activation = 'relu', pool = True):
         conv = Convolution2D(64, kernel_size, activation = activation)(input)
         conv = Convolution2D(64, kernel_size, activation = activation)(conv)
