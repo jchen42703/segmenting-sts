@@ -5,7 +5,7 @@ from keras.layers.convolutional import Conv2D, Conv2DTranspose
 from keras.layers.pooling import MaxPooling2D
 
 from keras.callbacks import EarlyStopping
-from keras.preprocessing.image import ImageDataGenerator
+# from keras.preprocessing.image import ImageDataGenerator
 from keras.optimizers import Adam
 import keras.backend as K
 
@@ -146,3 +146,76 @@ class unet_2d(object):
             except ValueError: 
                 pass
         return image_shapes
+    
+class DilatedCNN(object)
+    ''' Multi-Scale Dilated CNN'''
+    def __init__(self, input_shape = (56, 56, 1), activation = 'relu', num_classes = 2):
+        self.input_shape = input_shape
+        self.activation = activation
+        self.num_classes = num_classes
+    
+    @staticmethod
+    def conv_block(self, input, n_filters, kernel_size = (3,3), activation = 'relu', pool = True):
+        conv = Convolution2D(64, kernel_size, activation = activation)(input)
+        conv = Convolution2D(64, kernel_size, activation = activation)(conv)
+        conv = Convolution2D(64, (3,3), activation = activation)(conv)
+        if pool: 
+            conv = MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(conv)
+        return conv
+             
+    def build_model(self):
+        '''
+        deprecated syntax
+        '''
+        model_in = Input(input_shape)
+        # downsampling
+        pool1 = self.conv_block(model_in, n_filters = 64, kernel_size = (3,3), activation = 'relu')
+        pool2 = self.conv_block(pool1, n_filters = 128, kernel_size = (3,3), activation = 'relu')
+        pool3 = self.conv_block(pool2, n_filters = 256, kernel_size = (3,3), activation = 'relu')
+        conv4 = self.conv_block(pool3, n_filters = 512, kernel_size = (3,3), activation = 'relu', pool = False)
+        
+        # atrous convs
+        h = AtrousConvolution2D(512, 3, 3, atrous_rate=(2, 2), activation='relu', name='conv5_1')(h)
+        h = AtrousConvolution2D(512, 3, 3, atrous_rate=(2, 2), activation='relu', name='conv5_2')(h)
+        h = AtrousConvolution2D(512, 3, 3, atrous_rate=(2, 2), activation='relu', name='conv5_3')(h)
+        h = AtrousConvolution2D(4096, 7, 7, atrous_rate=(4, 4), activation='relu', name='fc6')(h)
+        
+        
+        h = Dropout(0.5, name='drop6')(h)
+        h = Convolution2D(4096, 1, 1, activation='relu', name='fc7')(h)
+        h = Dropout(0.5, name='drop7')(h)
+        h = Convolution2D(classes, 1, 1, name='final')(h)
+        h = ZeroPadding2D(padding=(1, 1))(h)
+        h = Convolution2D(classes, 3, 3, activation='relu', name='ctx_conv1_1')(h)
+        h = ZeroPadding2D(padding=(1, 1))(h)
+        h = Convolution2D(classes, 3, 3, activation='relu', name='ctx_conv1_2')(h)
+        h = ZeroPadding2D(padding=(2, 2))(h)
+        h = AtrousConvolution2D(classes, 3, 3, atrous_rate=(2, 2), activation='relu', name='ctx_conv2_1')(h)
+        h = ZeroPadding2D(padding=(4, 4))(h)
+        h = AtrousConvolution2D(classes, 3, 3, atrous_rate=(4, 4), activation='relu', name='ctx_conv3_1')(h)
+        h = ZeroPadding2D(padding=(8, 8))(h)
+        h = AtrousConvolution2D(classes, 3, 3, atrous_rate=(8, 8), activation='relu', name='ctx_conv4_1')(h)
+        h = ZeroPadding2D(padding=(16, 16))(h)
+        h = AtrousConvolution2D(classes, 3, 3, atrous_rate=(16, 16), activation='relu', name='ctx_conv5_1')(h)
+        h = ZeroPadding2D(padding=(32, 32))(h)
+        h = AtrousConvolution2D(classes, 3, 3, atrous_rate=(32, 32), activation=self.activation, name='ctx_conv6_1')(h)
+        h = ZeroPadding2D(padding=(64, 64))(h)
+        h = AtrousConvolution2D(classes, 3, 3, atrous_rate=(64, 64), activation=self.activation, name='ctx_conv7_1')(h)
+        h = ZeroPadding2D(padding=(1, 1))(h)
+        h = Convolution2D(self.num_classes, 3, 3, activation='relu', name='ctx_fc1')(h)
+        h = Convolution2D(self.num_classes, 1, 1, name='ctx_final')(h)
+
+        # the following two layers pretend to be a Deconvolution with grouping layer.
+        # never managed to implement it in Keras
+        # since it's just a gaussian upsampling trainable=False is recommended
+        h = UpSampling2D(size=(8, 8))(h)
+        logits = Convolution2D(self.num_classes, 16, 16, border_mode='same', bias=False, trainable=False, name='ctx_upsample')(h)
+
+        if apply_softmax:
+            model_out = softmax(logits)
+        else:
+            model_out = logits
+
+        model = Model(input=model_in, output=model_out)
+
+        return model
